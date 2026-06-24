@@ -1,6 +1,6 @@
 # Entity Spawning
 
-**Status:** Proposed
+**Status:** In Progress
 **Priority:** High
 **Depends on:** world-generation.md
 
@@ -55,10 +55,30 @@ A system for spawning entities into generated chunks based on context, affinity 
 - All spawned entities are hecs components — serializable for network sync
 - Spawn family algorithms live in `alj-core`
 
+## Implementation Status
+
+### Implemented (2026-06-24)
+
+- **12 decoration types:** PineTree, OakTree, BirchTree, Bush, FlowerBush, Rock, Boulder, MountainPeak, Pebbles, Flowers, Driftwood, SnowPile
+- **Affinity matrix:** Sparse function `affinity(from, to) -> f32` with ~30 asymmetric relationships. Examples: PineTree→Bush (0.3), OakTree→Flowers (0.2), Rock→Boulder (0.25), MountainPeak→SnowPile (0.25).
+- **AffinityTracker:** Records placed decorations during chunk generation. Computes distance-weighted boost for candidate spawns (linear falloff over 6-tile radius). Shared between group and recurring phases.
+- **Group-closed family:** Four group types — tree groves (4–8 entities, radius 2.5–4.5), flower patches (4–10, radius 2.0–4.0), rock formations (3–6, radius 2.0–3.5), mountain clusters (2–4, radius 2.5–4.0). Circular placement with 70% primary / 30% affinity-selected secondary. Roll probability gated by terrain composition and world vector density.
+- **Recurring family:** Per-tile probability checks for all 12 types against terrain. Base rates 1–8%, modulated by world density, affinity field, moisture, and accumulated affinity from nearby spawns. Capped at 50%.
+- **World vector modulation:** Conifer bonus (positive affinity field) vs temperate bonus (negative affinity field). Moisture boosts flowers. Density field scales all spawn rates.
+
+### Not yet implemented
+
+- **Group-open family:** Path/line-based placement (flower trails, rock ridges)
+- **Group-vector family:** Direction-field-aligned placement (wind-blown grass, erosion)
+- **Unique family:** At-most-one-per-chunk with exclusion zones (shrines, rare resources)
+- **Event-triggered spawns:** Deterministic event rolls with spawn chains
+- **Data-driven spawn tables:** Currently hardcoded in Rust; spec calls for config files
+- **hecs integration:** Decorations are stored as `Vec<DecorationInstance>` in chunks, not as hecs entities
+
 ## Acceptance Criteria
 
-- [ ] Affinity system produces visible clustering of related entities
+- [x] Affinity system produces visible clustering of related entities
 - [ ] All five spawn families produce distinct, recognizable patterns
 - [ ] Unique spawns correctly enforce exclusion zones
 - [ ] Event chains execute and produce expected entity/tile patterns
-- [ ] Spawn results are deterministic given the same seed and coordinates
+- [x] Spawn results are deterministic given the same seed and coordinates

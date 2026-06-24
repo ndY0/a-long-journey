@@ -56,7 +56,16 @@ TBD — Hunger, thirst, stamina, shelter, crafting, hazards.
 
 ## Art Direction
 
-TBD — Visual style, palette, tile/sprite approach, lighting.
+**Decorations** are rendered as geometric primitives (triangles, circles, rectangles) using macroquad immediate-mode draw calls. 12 decoration types with multiple color/size variants per type. Sizes are relative to TILE_SIZE (16px):
+- Trees: 1.0–1.5 tiles tall, canopy 0.8–1.0 tiles wide
+- Mountains: ~1.8 tiles tall, ~1.4 tiles base
+- Bushes: ~0.6 tiles diameter
+- Boulders: ~0.8 tiles diameter
+- Small props (pebbles, flowers): 0.1–0.15 tiles
+
+Decorations overlap neighboring tiles for natural appearance. Each type has 3–4 color variants selected by a deterministic variant index.
+
+TBD — Sprite-based art, palette system, lighting.
 
 ## Audio
 
