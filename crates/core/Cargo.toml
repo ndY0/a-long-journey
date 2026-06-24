@@ -1,0 +1,11 @@
+[package]
+name = "alj-core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+hecs = { version = "0.10", features = ["column-serialize", "serde"] }
+glam = { version = "0.29", features = ["serde"] }
+noise = "0.9"
+rand = "0.10"
+serde = { version = "1", features = ["derive"] }

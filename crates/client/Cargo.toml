@@ -1,0 +1,8 @@
+[package]
+name = "alj-client"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+alj-core = { path = "../core" }
+macroquad = "0.4"
